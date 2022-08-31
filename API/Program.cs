@@ -1,8 +1,11 @@
 
+using System.Text;
 using API.Data;
 using API.Interfaces;
 using API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+//Authentication. Nuget: Microsoft.AspNetCore.Authentication.JwtBearer
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) 
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"])),
+            ValidateIssuer = false, //<-- API server
+            ValidateAudience = false //<-- Angular application
+        };
+    }); 
 
 //Cross-Origin Resource Sharing (CORS)
 builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
@@ -35,6 +51,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("corsapp"); //<-- CROS
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 app.MapControllers();
