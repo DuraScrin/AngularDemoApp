@@ -1,6 +1,7 @@
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
@@ -11,9 +12,11 @@ namespace API.Controllers
     public class AccountController : BaseApiController
     {
         private readonly DataContext _context;
+        private readonly ITokenService _tokenService;
 
-        public AccountController(DataContext context)
+        public AccountController(DataContext context, ITokenService tokenService)
         {
+            _tokenService = tokenService;
             _context = context;
         }
 
@@ -34,7 +37,12 @@ namespace API.Controllers
             _context.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok(user);
+            UserDto userDto = new()
+            {
+                UserName = user.UserName,
+                Token = _tokenService.CreateToken(user)
+            };
+            return Ok(userDto);
         }
 
         [HttpPost]
@@ -55,7 +63,12 @@ namespace API.Controllers
                     return Unauthorized("Invalid password.");
             }
 
-            return Ok(user);
+            UserDto userDto = new()
+            {
+                UserName = user.UserName,
+                Token = _tokenService.CreateToken(user)
+            };
+            return Ok(userDto);
         }
 
         private async Task<bool> UserExists(string userName)
