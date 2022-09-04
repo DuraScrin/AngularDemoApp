@@ -71,6 +71,16 @@ namespace API.Controllers
             return Ok(userDto);
         }
 
+        [HttpDelete]
+        [Route("delete/{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            AppUser user = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+            return Accepted();
+        }
+
         private async Task<bool> UserExists(string userName)
         {
             bool exists = await _context.Users.AnyAsync(x => x.UserName == userName.ToLower());
