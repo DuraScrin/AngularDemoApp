@@ -2,7 +2,7 @@
     <div class="container">
         <a (click)="runTestServiceFunction()" class="navbar-brand" href="#">Dating App</a>
 
-        <ul *ngIf="loggedIn" class="navbar-nav mr-auto">
+        <ul *ngIf="accountService.currentUser$ | async" class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link" href="#">Matches</a>
             </li>
@@ -12,12 +12,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">Messages</a>
             </li>
-            <li class="nav-item">
-                <a (click)="logout()" class="nav-link" href="#">Logout</a>
-            </li>
         </ul>
 
-        <div class="dropdown" *ngIf="loggedIn" dropdown>
+        <div *ngIf="accountService.currentUser$ | async" class="dropdown" dropdown>
             <a class="dropdown-toggle text-light" dropdownToggle>Welcome user</a>
             <div class="dropdown-menu mt-3" *dropdownMenu>
                 <a class="dropdown-item">Edit Profile</a>
@@ -26,7 +23,7 @@
             </div>
         </div>
 
-        <form *ngIf="!loggedIn" #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off" class="form-inline mt-2 mt-md-0">
+        <form *ngIf="(accountService.currentUser$ | async) === null" #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off" class="form-inline mt-2 mt-md-0">
             <input
                 name="username"
                 [(ngModel)]="model.username" 
