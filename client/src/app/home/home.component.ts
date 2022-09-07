@@ -31,4 +31,9 @@ export class HomeComponent implements OnInit
       error: error => console.log(error)
     })
   }
+
+  cancelRegisterMode(event: boolean)
+  {
+    this.registerMode = event;
+  }
 }
