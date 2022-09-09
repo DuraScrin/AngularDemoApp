@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { User } from '../_models/User';
+import { Router } from '@angular/router';
 import { AccountService } from '../_services/account.service';
 import { TestService } from '../_services/test.service';
 
@@ -14,7 +13,8 @@ export class NavComponent implements OnInit
 {
   model: any = {}
 
-  constructor(public accountService: AccountService, private testService: TestService) { }
+  constructor(public accountService: AccountService, private router: Router, private testService: TestService) 
+  { }
 
   ngOnInit(): void 
   { }
@@ -24,6 +24,7 @@ export class NavComponent implements OnInit
     this.accountService.login(this.model).subscribe(response =>
       {
         console.log(response);
+        this.router.navigateByUrl('/members');
       }, error =>
       {
         console.log(error);
@@ -33,6 +34,7 @@ export class NavComponent implements OnInit
   logout()
   {
     this.accountService.logout();
+    this.router.navigateByUrl('/');
   }
 
   runTestServiceFunction()
