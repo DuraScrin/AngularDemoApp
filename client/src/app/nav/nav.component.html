@@ -2,7 +2,7 @@
     <div class="container">
         <a (click)="runTestServiceFunction()" class="navbar-brand" routerLink="/">Dating App</a>
 
-        <ul *ngIf="accountService.currentUser$ | async" class="navbar-nav mr-auto">
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link" routerLink="/members" routerLinkActive="active">Matches</a>
             </li>
