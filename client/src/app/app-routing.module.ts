@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { HomeComponent } from './home/home.component';
 import { ListComponent } from './list/list.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
@@ -20,10 +21,11 @@ const routes: Routes =
       {path: 'members', component: MemberListComponent },
       {path: 'members/:id', component: MemberDetailComponent},
       {path: 'lists', component: ListComponent},
-      {path: 'messages', component: MessagesComponent},
-      {path: '**', component: HomeComponent, pathMatch: 'full'}
+      {path: 'messages', component: MessagesComponent}      
     ]
-  }
+  },
+  {path: 'errors', component: TestErrorsComponent},
+  {path: '**', component: HomeComponent, pathMatch: 'full'},
 ];
 
 @NgModule({
