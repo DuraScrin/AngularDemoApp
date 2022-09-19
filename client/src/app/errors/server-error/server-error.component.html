@@ -1,0 +1,13 @@
+<h4>Internal server error - refreshig the page will make the error disappear!</h4>
+<ng-container *ngIf="error">
+    <h5 class="text-danger">Error: {{error.message}}</h5>
+    <p class="font-weight-bold">Note: If you are seeing this then Angulag is probably not to blame.</p>
+    <p>What to do next?</p>
+    <ol>
+        <li>Open dev tools.</li>
+        <li>Inspect network.</li>
+        <li>Check failing request(s)</li>
+    </ol>
+    <hr />
+    <code class="mt-5" style="background-color: whitesmoke;">{{error.details}}</code>
+</ng-container>
