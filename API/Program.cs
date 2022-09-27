@@ -1,7 +1,9 @@
+using API.Data;
 using API.Extensions;
 using API.Middelware;
+using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -13,7 +15,7 @@ builder.Services.AddApplicationSecurityServices(builder);
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -32,5 +34,20 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 app.MapControllers();
+
+//Seed data
+using var scope = app.Services.CreateScope();
+IServiceProvider services = scope.ServiceProvider;
+try
+{
+    DataContext context = services.GetRequiredService<DataContext>();
+    await context.Database.MigrateAsync();
+    await Seed.SeedUsers(context);
+}
+catch (Exception ex)
+{
+    ILogger logger = services.GetRequiredService<ILogger>();
+    logger.LogError(ex.Message);
+}
 
 app.Run();
